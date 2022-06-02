@@ -1,0 +1,8 @@
+FROM node:16-alpine
+WORKDIR '/app'
+COPY ./package.json ./
+RUN npm install
+COPY . .
+CMD ["npm", "run", "start"]
+
+# sha256:55d34417a9b293ebcb05291e33c52fa9df4002b4c9a423bc318b170cef974fcf 
