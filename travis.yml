@@ -1,0 +1,25 @@
+sudo: required
+services:
+ - docker
+
+before_install:
+  - docker build -t takaishotaro/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - - docker run -e CI=true takaishotaro/react-test npm test
+
+after_success:
+  - docker build -t takaishotaro/multi-client ./client
+  - docker build -t takaishotaro/multi-nginx ./nginx
+  - docker build -t takaishotaro/multi-server ./server
+  - docker build -t takaishotaro/multi-worker ./worker
+  # log in to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # take those images to docker-hub
+  - docker push takaishotaro/multi-client
+  - docker push takaishotaro/multi-nginx
+  - docker push takaishotaro/multi-server
+  - docker push takaishotaro/multi-worker
+
+ 
+
